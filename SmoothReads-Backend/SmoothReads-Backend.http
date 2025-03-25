@@ -1,0 +1,6 @@
+@SmoothReads_Backend_HostAddress = http://localhost:5250
+
+GET {{SmoothReads_Backend_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
