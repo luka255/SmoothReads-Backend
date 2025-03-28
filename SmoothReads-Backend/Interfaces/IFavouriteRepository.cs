@@ -3,9 +3,12 @@ using SmoothReads_Backend.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-public interface IFavouriteRepository
+namespace SmoothReads_Backend.Interfaces
 {
-    Task<IEnumerable<Favourite>> GetFavouritesByUserIdAsync(int userId);
-    Task<Favourite> AddFavouritesAsync(int userId, int bookId);
-    Task<Favourite> RemoveFavourites(int userId, int bookId);
+    public interface IFavouriteRepository
+    {
+        Task<List<Favourite>?> GetFavouritesByUserIdAsync(int userId);
+        Task<Favourite?> AddFavouritesAsync(int userId, int bookId);
+        Task<Favourite?> RemoveFavouritesAsync(int userId, int bookId);
+    }
 }

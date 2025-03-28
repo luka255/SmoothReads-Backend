@@ -3,9 +3,13 @@ using SmoothReads_Backend.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-public interface ICommentsRepository
+namespace SmoothReads_Backend.Interfaces
 {
-    Task<IEnumerable<Comment>> GetCommentsByBookIdAsync(int bookId);
-    Task<Comment> AddCommentAsync(Comment comment);
-    Task<bool> DeleteCommentAsync(int commentId);
-}
+    public interface ICommentsRepository
+    {
+        Task<List<Comment>> GetAllCommentsAsync();
+        Task<List<Comment>> GetCommentsByBookIdAsync(int bookId);
+        Task<Comment> AddCommentAsync(Comment comment);
+        Task<Comment> DeleteCommentAsync(int commentId);
+    }
+} 
