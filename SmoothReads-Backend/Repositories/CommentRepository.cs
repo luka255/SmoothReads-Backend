@@ -20,7 +20,7 @@ namespace SmoothReads_Backend.Repositories
             return comment;
         }
 
-        public async Task<Comment> DeleteCommentAsync(int commentId)
+        public async Task<Comment?> DeleteCommentAsync(int commentId)
         {
             var commentModel = await _Context.Comments.FindAsync(commentId);
 
@@ -41,6 +41,9 @@ namespace SmoothReads_Backend.Repositories
         {
             return await _Context.Comments.Where(c => c.Id == bookId).ToListAsync();
         }
-
+        public async Task<Comment?> GetCommentByIdAsync(int id)
+        {
+            return await _Context.Comments.FindAsync(id);
+        }
     }
 }

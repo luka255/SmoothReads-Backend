@@ -42,7 +42,7 @@ namespace SmoothReads_Backend.Repositories
         {
             return await _context.Books.Where(b => b.Genre == genre).ToListAsync();
         }
-        public async Task<Book> UpdateBookAsync(int bookId, Book updatedBook)
+        public async Task<Book?> UpdateBookAsync(int bookId, Book updatedBook)
         {
             var bookModel = await _context.Books.FirstOrDefaultAsync(x => x.Id == bookId);
 

@@ -9,7 +9,7 @@ namespace SmoothReads_Backend.Interfaces
         Task<List<Book>> GetBooksByGenreAsync(string genre);
         Task<Book?> GetBookByIdAsync(int id);
         Task<Book> AddBookAsync(Book book);
-        Task<Book> UpdateBookAsync(int bookId, Book updatedBook);
+        Task<Book?> UpdateBookAsync(int bookId, Book updatedBook);
         Task<Book?> DeleteBookAsync(int bookId);
     }
 }
