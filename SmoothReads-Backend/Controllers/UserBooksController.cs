@@ -27,10 +27,43 @@ namespace SmoothReads_Backend.Controllers
             return Ok(readBooks);
         }
 
-        [HttpPost("add WantToRead")]
+        [HttpPost("want-to-read")]
         public async Task<IActionResult> AddWantToReadBooks(WantToRead wantToRead)
         {
+            var WantToRead = await _repo.AddWantToReadBooksAsync(wantToRead);
+            return Ok(WantToRead);
+        }
 
+        [HttpPost("read-books")]
+        public async Task<IActionResult> AddReadBooks(Read Read)
+        {
+            var readbook = await _repo.AddReadBooksAsync(Read);
+            return Ok(readbook);
+        }
+
+        [HttpDelete("want-to-read/{userId}/{bookId}")]
+        public async Task<IActionResult> DeleteWantToReadBook(int userId, int bookId)
+        {
+            var wtrBook = await _repo.GetWantToReadBooksAsync(userId);
+
+            if (wtrBook == null)
+                return BadRequest();
+
+            await _repo.DeleteWantToReadBookAsync(userId, bookId);
+
+            return Ok();
+        }
+        [HttpDelete("read/{userId}/{bookId}")]
+        public async Task<IActionResult> DeleteReadBook(int userId, int bookId)
+        {
+            var readBook = await _repo.GetReadBooksAsync(userId);
+
+            if (readBook == null)
+                return BadRequest();
+
+            await _repo.DeleteReadBookAsync(userId, bookId);
+
+            return Ok();
         }
     }
 }
