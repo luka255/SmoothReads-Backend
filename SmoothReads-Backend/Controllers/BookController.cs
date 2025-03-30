@@ -22,7 +22,7 @@ namespace SmoothReads_Backend.Controllers
             return Ok(books);
         }
 
-        [HttpGet("{genre}")]
+        [HttpGet("genre/{genre}")]
         public async Task<IActionResult> GetBooksByGenre(string genre)
         {
             var books = await _repo.GetBooksByGenreAsync(genre);
@@ -33,7 +33,7 @@ namespace SmoothReads_Backend.Controllers
             return Ok(books);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("id/{id}")]
         public async Task<IActionResult> GetBooksById(int id)
         {
             var book = await _repo.GetBookByIdAsync(id);

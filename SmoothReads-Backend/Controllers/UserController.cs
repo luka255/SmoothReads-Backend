@@ -15,7 +15,7 @@ namespace SmoothReads_Backend.Controllers
             _repo = repo;
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("id/{id}")]
         public async Task<IActionResult> GetUserById(int id)
         {
             var user = await _repo.GetUserByIdAsync(id);
@@ -26,7 +26,7 @@ namespace SmoothReads_Backend.Controllers
             return Ok(user);
         }
 
-        [HttpGet("{email}")]
+        [HttpGet("email/{email}")]
         public async Task<IActionResult> GetUserByEmail(string email)
         {
             var user = await _repo.GetUserByEmailAsync(email);

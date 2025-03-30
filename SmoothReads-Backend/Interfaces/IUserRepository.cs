@@ -8,7 +8,7 @@ namespace SmoothReads_Backend.Interfaces
     public interface IUserRepository
     {
         Task<User?> GetUserByIdAsync(int id);
-        Task<User> GetUserByEmailAsync(string email);
+        Task<User?> GetUserByEmailAsync(string email);
         Task<User> AddUserAsync(User user);
     }
 }

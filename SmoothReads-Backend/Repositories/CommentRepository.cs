@@ -1,7 +1,9 @@
 ﻿using SmoothReads_Backend.Data;
 using SmoothReads_Backend.Interfaces;
 using SmoothReads_Backend.Models;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
+using System.Net;
+
 
 namespace SmoothReads_Backend.Repositories
 {
@@ -39,11 +41,14 @@ namespace SmoothReads_Backend.Repositories
 
         public async Task<List<Comment>> GetCommentsByBookIdAsync(int bookId)
         {
-            return await _Context.Comments.Where(c => c.Id == bookId).ToListAsync();
+            return await _Context.Comments.Where(c => c.BookId == bookId).ToListAsync();
         }
-        public async Task<Comment?> GetCommentByIdAsync(int id)
+        public async Task<List<Comment>?> GetCommentByIdAsync(int bookId)
         {
-            return await _Context.Comments.FindAsync(id);
+            return await _Context.Comments
+                .Where(c => c.BookId == bookId)
+                .Include(c => c.User)
+                .ToListAsync();
         }
     }
 }

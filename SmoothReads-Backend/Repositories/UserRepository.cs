@@ -1,7 +1,7 @@
 ﻿using SmoothReads_Backend.Data;
 using SmoothReads_Backend.Interfaces;
 using SmoothReads_Backend.Models;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 
 namespace SmoothReads_Backend.Repositories
 {
@@ -20,7 +20,7 @@ namespace SmoothReads_Backend.Repositories
             return user;
         }
 
-        public async Task<User> GetUserByEmailAsync(string email)
+        public async Task<User?> GetUserByEmailAsync(string email)
         {
             return await _Context.Users.FirstOrDefaultAsync(u => u.Email == email);
 
@@ -28,7 +28,10 @@ namespace SmoothReads_Backend.Repositories
 
         public async Task<User?> GetUserByIdAsync(int id)
         {
-            return await _Context.Users.FindAsync(id);
+            return await _Context.Users
+                .Include(u => u.Reads)
+                .Include(u => u.WantsToReads)
+                .FirstOrDefaultAsync(u => u.Id == id);
         }
     }
 }

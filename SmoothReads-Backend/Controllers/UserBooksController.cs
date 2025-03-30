@@ -14,56 +14,52 @@ namespace SmoothReads_Backend.Controllers
             _repo = repo;
         }
         [HttpGet("WantToRead")]
-        public async Task<IActionResult> GetWantToReadBooks(int userId)
+        public async Task<IActionResult> GetWantToReadBooks([FromQuery] int userId)
         {
             var wtrBooks = await _repo.GetWantToReadBooksAsync(userId);
             return Ok(wtrBooks);
         }
 
         [HttpGet("Read")]
-        public async Task<IActionResult> GetReadBooks(int userId)
+        public async Task<IActionResult> GetReadBooks([FromQuery] int userId)
         {
             var readBooks = await _repo.GetReadBooksAsync(userId);
             return Ok(readBooks);
         }
 
         [HttpPost("want-to-read")]
-        public async Task<IActionResult> AddWantToReadBooks(WantToRead wantToRead)
+        public async Task<IActionResult> AddWantToReadBooks([FromQuery] WantToRead wantToRead)
         {
             var WantToRead = await _repo.AddWantToReadBooksAsync(wantToRead);
-            return Ok(WantToRead);
+            return CreatedAtAction(nameof(GetWantToReadBooks), new { id = wantToRead.Id }, wantToRead);
         }
 
         [HttpPost("read-books")]
-        public async Task<IActionResult> AddReadBooks(Read Read)
+        public async Task<IActionResult> AddReadBooks([FromQuery] Read read)
         {
-            var readbook = await _repo.AddReadBooksAsync(Read);
-            return Ok(readbook);
+            var readbook = await _repo.AddReadBooksAsync(read);
+            return CreatedAtAction(nameof(GetReadBooks), new { id = read.Id }, read);
         }
 
         [HttpDelete("want-to-read/{userId}/{bookId}")]
         public async Task<IActionResult> DeleteWantToReadBook(int userId, int bookId)
         {
-            var wtrBook = await _repo.GetWantToReadBooksAsync(userId);
+            var deletedBook = await _repo.DeleteWantToReadBookAsync(userId, bookId);
 
-            if (wtrBook == null)
+            if (deletedBook == null)
                 return BadRequest();
 
-            await _repo.DeleteWantToReadBookAsync(userId, bookId);
-
-            return Ok();
+            return Ok(deletedBook);
         }
         [HttpDelete("read/{userId}/{bookId}")]
         public async Task<IActionResult> DeleteReadBook(int userId, int bookId)
         {
-            var readBook = await _repo.GetReadBooksAsync(userId);
+            var deletedBook = await _repo.DeleteReadBookAsync(userId, bookId);
 
-            if (readBook == null)
+            if (deletedBook == null)
                 return BadRequest();
 
-            await _repo.DeleteReadBookAsync(userId, bookId);
-
-            return Ok();
+            return Ok(deletedBook);
         }
     }
 }

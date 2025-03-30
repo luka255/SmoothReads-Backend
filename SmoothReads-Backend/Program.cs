@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using SmoothReads_Backend.Data;
+using SmoothReads_Backend.Interfaces;
+using SmoothReads_Backend.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +16,12 @@ builder.Services.AddDbContext<ApplicationDBContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+
+builder.Services.AddScoped<IBookRepository,BookRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ICommentsRepository, CommentRepository>();
+builder.Services.AddScoped<IFavouriteRepository, FavouriteRepository>();
+builder.Services.AddScoped<IUserBooksRepository, UserBooksRepository>();
 
 var app = builder.Build();
 

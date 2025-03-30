@@ -21,7 +21,7 @@ namespace SmoothReads_Backend.Controllers
             var comments = await _repo.GetAllCommentsAsync();
             return Ok(comments);
         }
-        [HttpGet("{id}")]
+        [HttpGet("byId/{id}")]
         public async Task<IActionResult> GetCommentById(int id)
         {
             var comments = await _repo.GetCommentByIdAsync(id);
@@ -32,7 +32,7 @@ namespace SmoothReads_Backend.Controllers
             return Ok(comments);
         }
 
-        [HttpGet("{bookId}")]
+        [HttpGet("byBook/{bookId}")]
         public async Task<IActionResult> GetCommentsByBookId(int bookId)
         {
             var comments = await _repo.GetCommentsByBookIdAsync(bookId);

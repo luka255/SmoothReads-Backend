@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using SmoothReads_Backend.Data;
 using SmoothReads_Backend.Interfaces;
 using SmoothReads_Backend.Models;
@@ -32,11 +32,17 @@ namespace SmoothReads_Backend.Repositories
         }
         public async Task<List<Book>> GetAllBooksAsync()
         {
-            return await _context.Books.ToListAsync();
+            return await _context.Books
+                .Include(b => b.Comments)
+                .Include(b => b.Favourites)
+                .ToListAsync();
         }
         public async Task<Book?> GetBookByIdAsync(int id)
         {
-            return await _context.Books.FindAsync(id);
+            return await _context.Books
+                .Include(b => b.Comments)
+                .Include(b => b.Favourites)
+                .FirstOrDefaultAsync(b => b.Id == id);
         }
         public async Task<List<Book>> GetBooksByGenreAsync(string genre)
         {
@@ -56,8 +62,8 @@ namespace SmoothReads_Backend.Repositories
             bookModel.PublicationYear = updatedBook.PublicationYear;
             bookModel.Rating = updatedBook.Rating;
             bookModel.ImageUrl = updatedBook.ImageUrl;
-            
-            _context.SaveChanges();
+
+            await _context.SaveChangesAsync();
             return bookModel;
         }
     }

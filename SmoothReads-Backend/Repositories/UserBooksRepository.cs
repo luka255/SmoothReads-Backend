@@ -1,7 +1,8 @@
 ﻿using SmoothReads_Backend.Data;
 using SmoothReads_Backend.Interfaces;
 using SmoothReads_Backend.Models;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace SmoothReads_Backend.Repositories
 {
@@ -29,7 +30,7 @@ namespace SmoothReads_Backend.Repositories
 
         public async Task<Read?> DeleteReadBookAsync(int userId, int bookId)
         {
-            var readBookModel = await _context.Reads.FindAsync(userId, bookId);
+            var readBookModel = await _context.Reads.FirstOrDefaultAsync(r => r.UserId == userId && r.BookId == bookId);
             
             if (readBookModel == null)
                 return null;
@@ -42,7 +43,7 @@ namespace SmoothReads_Backend.Repositories
 
         public async Task<WantToRead?> DeleteWantToReadBookAsync(int userId, int bookId)
         {
-            var wantToReadModel = await _context.WantToReads.FindAsync(userId,bookId);
+            var wantToReadModel = await _context.WantToReads.FirstOrDefaultAsync(r => r.UserId == userId && r.BookId == bookId);
 
             if (wantToReadModel == null)
                 return null ;
@@ -54,12 +55,12 @@ namespace SmoothReads_Backend.Repositories
 
         public async Task<List<Read>> GetReadBooksAsync(int userId)
         {
-            return await _context.Reads.Where(u => u.Id == userId).ToListAsync();
+            return await _context.Reads.Where(u => u.UserId == userId).ToListAsync();
         }
 
         public async Task<List<WantToRead>> GetWantToReadBooksAsync(int userId)
         {
-            return await _context.WantToReads.Where(u => u.Id == userId).ToListAsync();
+            return await _context.WantToReads.Where(u => u.UserId == userId).ToListAsync();
         }
     }
 }

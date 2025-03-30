@@ -1,7 +1,8 @@
 ﻿using SmoothReads_Backend.Data;
 using SmoothReads_Backend.Interfaces;
 using SmoothReads_Backend.Models;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace SmoothReads_Backend.Repositories
 {
@@ -15,9 +16,9 @@ namespace SmoothReads_Backend.Repositories
 
         public async Task<Favourite?> AddFavouritesAsync(int userId, int bookId)
         {
-            var favourtieModel = await _context.Favourites.FirstOrDefaultAsync(f => f.UserId == userId && f.BookId == bookId);
+            var favouriteModel  = await _context.Favourites.FirstOrDefaultAsync(f => f.UserId == userId && f.BookId == bookId);
     
-            if (favourtieModel != null) 
+            if (favouriteModel != null) 
                 return null;
 
             var newFavourite = new Favourite
@@ -33,19 +34,22 @@ namespace SmoothReads_Backend.Repositories
 
         public async Task<List<Favourite>?> GetFavouritesByUserIdAsync(int userId)
         {
-            return await _context.Favourites.Where(f => f.UserId == userId).ToListAsync();
+            return await _context.Favourites
+                .Where(f => f.UserId == userId)
+                .Include(f => f.Book)
+                .ToListAsync();
         }
 
         public async Task<Favourite?> RemoveFavouritesAsync(int userId, int bookId)
         {
-            var favourtieModel = await _context.Favourites.FirstOrDefaultAsync(f => f.UserId == userId && f.BookId == bookId);
+            var favouriteModel = await _context.Favourites.FirstOrDefaultAsync(f => f.UserId == userId && f.BookId == bookId);
 
-            if (favourtieModel == null)
+            if (favouriteModel == null)
                 return null;
 
-            _context.Favourites.Remove(favourtieModel);
+            _context.Favourites.Remove(favouriteModel);
             await _context.SaveChangesAsync();
-            return favourtieModel;
+            return favouriteModel;
         }
     }
 }

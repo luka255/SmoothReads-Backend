@@ -13,7 +13,7 @@ namespace SmoothReads_Backend.Controllers
             _repo = repo;
         }
 
-        [HttpGet("userId")]
+        [HttpGet("{userId}")]
         public async Task<IActionResult> GetFavouriteByUserId(int userId)
         {
             var favourites = await _repo.GetFavouritesByUserIdAsync(userId);
