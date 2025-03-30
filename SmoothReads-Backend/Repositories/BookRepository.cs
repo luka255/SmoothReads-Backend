@@ -1,8 +1,11 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using SmoothReads_Backend.Data;
+using SmoothReads_Backend.DTOs.Book;
 using SmoothReads_Backend.Interfaces;
 using SmoothReads_Backend.Models;
+using SmoothReads_Backend.DTOs;
+using SmoothReads_Backend.Mappers;
 
 namespace SmoothReads_Backend.Repositories
 {
@@ -13,11 +16,14 @@ namespace SmoothReads_Backend.Repositories
 		{
 			_context = context;
 		}
-        public async Task<Book> AddBookAsync(Book book)
+        public async Task<Book> AddBookAsync(AddBookDto bookDto)
         {
-            await _context.Books.AddAsync(book);
+            var bookModel = bookDto.ToBookFromCreateDTO();
+
+            await _context.Books.AddAsync(bookModel);
             await _context.SaveChangesAsync();
-            return book;
+
+            return bookModel;
         }
         public async Task<Book?> DeleteBookAsync(int bookId)
         {
@@ -48,7 +54,7 @@ namespace SmoothReads_Backend.Repositories
         {
             return await _context.Books.Where(b => b.Genre == genre).ToListAsync();
         }
-        public async Task<Book?> UpdateBookAsync(int bookId, Book updatedBook)
+        public async Task<Book?> UpdateBookAsync(int bookId, UpdateBookDto updatedBook)
         {
             var bookModel = await _context.Books.FirstOrDefaultAsync(x => x.Id == bookId);
 
@@ -65,6 +71,10 @@ namespace SmoothReads_Backend.Repositories
 
             await _context.SaveChangesAsync();
             return bookModel;
+        }
+        public Task<bool> BookExist(int bookId)
+        {
+            return _context.Books.AnyAsync(b => b.Id == bookId);
         }
     }
 }

@@ -11,6 +11,21 @@ namespace SmoothReads_Backend.Data
         {
         }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Comment>()
+                .HasOne(c => c.Book)
+                .WithMany(b => b.Comments)
+                .HasForeignKey(c => c.BookId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Comment>()
+                .HasOne(c => c.User)
+                .WithMany(u => u.Comments) 
+                .HasForeignKey(c => c.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+        }
+
         public DbSet<User> Users { get; set; }
         public DbSet<Book> Books { get; set; }
         public DbSet<Comment> Comments { get; set; }

@@ -1,6 +1,6 @@
 ﻿namespace SmoothReads_Backend.DTOs.Book
 {
-    public class BookDtos
+    public class BookDto
     {
         public int Id { get; set; }
         public string Title { get; set; } = string.Empty;

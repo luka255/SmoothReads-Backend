@@ -3,6 +3,8 @@ using SmoothReads_Backend.Interfaces;
 using SmoothReads_Backend.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
+using SmoothReads_Backend.DTOs.Comment;
+using SmoothReads_Backend.Mappers;
 
 
 namespace SmoothReads_Backend.Repositories
@@ -14,12 +16,11 @@ namespace SmoothReads_Backend.Repositories
         {
             _Context = context;
         }
-
-        public async Task<Comment> AddCommentAsync(Comment comment)
+        public async Task<Comment?> AddCommentAsync(Comment commentModel)
         {
-            await _Context.Comments.AddAsync(comment);
+            await _Context.Comments.AddAsync(commentModel);
             await _Context.SaveChangesAsync();
-            return comment;
+            return commentModel;
         }
 
         public async Task<Comment?> DeleteCommentAsync(int commentId)
@@ -47,7 +48,6 @@ namespace SmoothReads_Backend.Repositories
         {
             return await _Context.Comments
                 .Where(c => c.BookId == bookId)
-                .Include(c => c.User)
                 .ToListAsync();
         }
     }

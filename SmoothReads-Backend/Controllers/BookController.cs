@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SmoothReads_Backend.Data;
+using SmoothReads_Backend.DTOs.Book;
 using SmoothReads_Backend.Interfaces;
+using SmoothReads_Backend.Mappers;
 using SmoothReads_Backend.Models;
 
 namespace SmoothReads_Backend.Controllers
@@ -45,20 +47,21 @@ namespace SmoothReads_Backend.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddBook(Book book)
+        public async Task<IActionResult> AddBook([FromBody] AddBookDto bookDto)
         {
-            await _repo.AddBookAsync(book);
-            return CreatedAtAction(nameof(GetBooksById), new {id = book.Id}, book);
+            var bookModel = await _repo.AddBookAsync(bookDto);
+            return CreatedAtAction(nameof(GetBooksById), new {id = bookModel.Id}, bookModel);
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateBook(int bookId, Book updatedBook)
+        public async Task<IActionResult> UpdateBook(int bookId, [FromBody] UpdateBookDto updatedBook)
         {
-            if (bookId != updatedBook.Id)
-                return BadRequest();
+            var bookModel = await _repo.UpdateBookAsync(bookId, updatedBook);
 
-            await _repo.UpdateBookAsync(bookId, updatedBook);
-            return Ok();
+            if (bookModel == null)  
+                return NotFound();
+
+            return Ok(bookModel.ToBookDto());
         }
 
         [HttpDelete]

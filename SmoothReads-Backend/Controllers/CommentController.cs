@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SmoothReads_Backend.Data;
+using SmoothReads_Backend.DTOs.Comment;
 using SmoothReads_Backend.Interfaces;
+using SmoothReads_Backend.Mappers;
 using SmoothReads_Backend.Models;
 
 namespace SmoothReads_Backend.Controllers
@@ -10,9 +12,11 @@ namespace SmoothReads_Backend.Controllers
     public class CommentController : ControllerBase
     {
         private readonly ICommentsRepository _repo;
-        public CommentController(ICommentsRepository repo) 
+        private readonly IBookRepository _bookRepo;
+        public CommentController(ICommentsRepository repo,IBookRepository bookRepo) 
         {
             _repo = repo;
+            _bookRepo = bookRepo;
         }
 
         [HttpGet]
@@ -43,11 +47,15 @@ namespace SmoothReads_Backend.Controllers
             return Ok(comments);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> AddComment(Comment comment)
+        [HttpPost("{bookId}")]
+        public async Task<IActionResult> AddComment([FromRoute] int bookId, [FromBody] AddCommentDto commentDto)
         {
-            var comments = await _repo.AddCommentAsync(comment);
-            return Ok(comments);
+            if (!await _bookRepo.BookExist(bookId))
+                return BadRequest("book does not exsit");
+
+            var commentModel = commentDto.ToCommentFromCreateDto(bookId);
+            await _repo.AddCommentAsync(commentModel);
+            return CreatedAtAction(nameof(GetCommentById),new {id = commentModel.Id} ,commentModel);
         }
 
         [HttpDelete]

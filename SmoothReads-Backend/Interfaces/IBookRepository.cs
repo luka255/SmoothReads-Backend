@@ -1,4 +1,5 @@
 ﻿using System;
+using SmoothReads_Backend.DTOs.Book;
 using SmoothReads_Backend.Models;
 
 namespace SmoothReads_Backend.Interfaces
@@ -8,8 +9,9 @@ namespace SmoothReads_Backend.Interfaces
         Task<List<Book>> GetAllBooksAsync();
         Task<List<Book>> GetBooksByGenreAsync(string genre);
         Task<Book?> GetBookByIdAsync(int id);
-        Task<Book> AddBookAsync(Book book);
-        Task<Book?> UpdateBookAsync(int bookId, Book updatedBook);
+        Task<Book> AddBookAsync(AddBookDto book);
+        Task<Book?> UpdateBookAsync(int bookId, UpdateBookDto updatedBook);
         Task<Book?> DeleteBookAsync(int bookId);
+        Task<bool> BookExist(int bookId);
     }
 }
