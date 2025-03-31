@@ -19,13 +19,15 @@ namespace SmoothReads_Backend.Mappers
             };
         }
 
-        public static Comment ToCommentFromCreateDto(this AddCommentDto CommentDto, int bookId)
+        public static Comment ToCommentFromCreateDto(this AddCommentDto CommentDto, int bookId,int userId)
         {
             return new Comment
             {
                 Text = CommentDto.Text,
                 CreatedAt = CommentDto.CreatedAt,
                 Rating = CommentDto.Rating,
+                BookId = bookId,
+                UserId = userId,
             };
         }
     }

@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using SmoothReads_Backend.Data;
 using SmoothReads_Backend.Interfaces;
-using SmoothReads_Backend.Repositories;
+using SmoothReads_Backend.Interfaces.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -2,8 +2,10 @@
 using SmoothReads_Backend.Interfaces;
 using SmoothReads_Backend.Models;
 using Microsoft.EntityFrameworkCore;
+using SmoothReads_Backend.DTOs.User;
+using SmoothReads_Backend.Mappers;
 
-namespace SmoothReads_Backend.Repositories
+namespace SmoothReads_Backend.Interfaces.Repositories
 {
     public class UserRepository : IUserRepository
     {
@@ -13,11 +15,18 @@ namespace SmoothReads_Backend.Repositories
             _Context = context;
         }
 
-        public async Task<User> AddUserAsync(User user)
+        public async Task<User> AddUserAsync(CreateUserDto userDto)
         {
-            await _Context.AddAsync(user);
+            var userModel = userDto.ToUserFromCreateDto();
+
+            await _Context.AddAsync(userModel);
             await _Context.SaveChangesAsync();
-            return user;
+            return userModel;
+        }
+
+        public async Task<List<User>> GetAllAsync()
+        {
+            return await _Context.Users.ToListAsync();
         }
 
         public async Task<User?> GetUserByEmailAsync(string email)
@@ -32,6 +41,11 @@ namespace SmoothReads_Backend.Repositories
                 .Include(u => u.Reads)
                 .Include(u => u.WantsToReads)
                 .FirstOrDefaultAsync(u => u.Id == id);
+        }
+
+        public async Task<bool> UserExist(int userId)
+        {
+            return await _Context.Users.AnyAsync(u => u.Id==userId);
         }
     }
 }

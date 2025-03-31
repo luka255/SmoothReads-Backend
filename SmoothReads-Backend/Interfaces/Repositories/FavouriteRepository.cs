@@ -4,7 +4,7 @@ using SmoothReads_Backend.Models;
 using Microsoft.EntityFrameworkCore;
 
 
-namespace SmoothReads_Backend.Repositories
+namespace SmoothReads_Backend.Interfaces.Repositories
 {
     public class FavouriteRepository : IFavouriteRepository
     {

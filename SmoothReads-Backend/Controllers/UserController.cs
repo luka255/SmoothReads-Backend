@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SmoothReads_Backend.DTOs.User;
 using SmoothReads_Backend.Interfaces;
 using SmoothReads_Backend.Models;
 
@@ -13,6 +14,13 @@ namespace SmoothReads_Backend.Controllers
         public UserController(IUserRepository repo)
         {
             _repo = repo;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            var users = await _repo.GetAllAsync();
+            return Ok(users);
         }
 
         [HttpGet("id/{id}")]
@@ -38,10 +46,11 @@ namespace SmoothReads_Backend.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddUser(User newUser)
+        public async Task<IActionResult> AddUser([FromBody] CreateUserDto newUser)
         {
-            await _repo.AddUserAsync(newUser);
-            return CreatedAtAction(nameof(GetUserByEmail), new {id = newUser.Id} ,newUser);
+           
+            var userModel = await _repo.AddUserAsync(newUser);
+            return CreatedAtAction(nameof(GetUserById), new {id = userModel.Id} , userModel);
         }
     }
 }

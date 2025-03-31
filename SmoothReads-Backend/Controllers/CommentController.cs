@@ -13,10 +13,13 @@ namespace SmoothReads_Backend.Controllers
     {
         private readonly ICommentsRepository _repo;
         private readonly IBookRepository _bookRepo;
-        public CommentController(ICommentsRepository repo,IBookRepository bookRepo) 
+        private readonly IUserRepository _UserRepo;
+
+        public CommentController(ICommentsRepository repo,IBookRepository bookRepo, IUserRepository userRepo) 
         {
             _repo = repo;
             _bookRepo = bookRepo;
+            _UserRepo = userRepo;
         }
 
         [HttpGet]
@@ -47,13 +50,17 @@ namespace SmoothReads_Backend.Controllers
             return Ok(comments);
         }
 
-        [HttpPost("{bookId}")]
-        public async Task<IActionResult> AddComment([FromRoute] int bookId, [FromBody] AddCommentDto commentDto)
+        [HttpPost("{userId}/{bookId}")]
+        public async Task<IActionResult> AddComment([FromRoute] int bookId, [FromRoute]int userId,[FromBody] AddCommentDto commentDto)
         {
             if (!await _bookRepo.BookExist(bookId))
                 return BadRequest("book does not exsit");
+            if (!await _UserRepo.UserExist(bookId))
+                return BadRequest("book does not exsit");
 
-            var commentModel = commentDto.ToCommentFromCreateDto(bookId);
+
+            var commentModel = commentDto.ToCommentFromCreateDto(bookId,userId);
+            //commentModel.UserId = commentDto.UserId;
             await _repo.AddCommentAsync(commentModel);
             return CreatedAtAction(nameof(GetCommentById),new {id = commentModel.Id} ,commentModel);
         }

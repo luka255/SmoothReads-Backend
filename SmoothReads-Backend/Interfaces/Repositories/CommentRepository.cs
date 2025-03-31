@@ -7,7 +7,7 @@ using SmoothReads_Backend.DTOs.Comment;
 using SmoothReads_Backend.Mappers;
 
 
-namespace SmoothReads_Backend.Repositories
+namespace SmoothReads_Backend.Interfaces.Repositories
 {
     public class CommentRepository : ICommentsRepository
     {

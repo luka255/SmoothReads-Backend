@@ -1,5 +1,6 @@
 ﻿namespace SmoothReads_Backend.DTOs.Book
 {
+    using SmoothReads_Backend.Models;
     public class BookDto
     {
         public int Id { get; set; }
@@ -10,5 +11,6 @@
         public int PublicationYear { get; set; }
         public float Rating { get; set; }
         public string ImageUrl { get; set; } = string.Empty;
+        public List<Comment> Comments { get; set; } = new List<Comment>();
     }
 }

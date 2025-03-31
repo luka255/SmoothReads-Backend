@@ -6,8 +6,10 @@ using SmoothReads_Backend.Interfaces;
 using SmoothReads_Backend.Models;
 using SmoothReads_Backend.DTOs;
 using SmoothReads_Backend.Mappers;
+using System.Collections.Generic;
+using System.Xml.Linq;
 
-namespace SmoothReads_Backend.Repositories
+namespace SmoothReads_Backend.Interfaces.Repositories
 {
     public class BookRepository : IBookRepository
 	{
@@ -36,12 +38,25 @@ namespace SmoothReads_Backend.Repositories
             await _context.SaveChangesAsync();
             return bookModel;
         }
-        public async Task<List<Book>> GetAllBooksAsync()
+        public async Task<List<BookDto>> GetAllBooksAsync()
         {
-            return await _context.Books
-                .Include(b => b.Comments)
-                .Include(b => b.Favourites)
+            var books = await _context.Books
                 .ToListAsync();
+
+            var bookDto = books.Select(b => new BookDto
+            {
+                Id = b.Id,
+                Title = b.Title,
+                Author = b.Author,
+                Genre = b.Genre,
+                Description = b.Description,
+                PublicationYear = b.PublicationYear,
+                Rating = b.Rating,
+                ImageUrl = b.ImageUrl,
+                Comments = b.Comments
+            }).ToList();
+
+            return bookDto;
         }
         public async Task<Book?> GetBookByIdAsync(int id)
         {

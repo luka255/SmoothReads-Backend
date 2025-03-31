@@ -21,6 +21,7 @@ namespace SmoothReads_Backend.Controllers
         public async Task<IActionResult> GetAllBooks()
         {
             var books = await _repo.GetAllBooksAsync();
+
             return Ok(books);
         }
 
