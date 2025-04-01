@@ -2,6 +2,11 @@
 using SmoothReads_Backend.Interfaces;
 using SmoothReads_Backend.Models;
 using Microsoft.EntityFrameworkCore;
+using SmoothReads_Backend.DTOs.Book;
+using SmoothReads_Backend.Mappers;
+using SmoothReads_Backend.DTOs.Favourite;
+using SmoothReads_Backend.DTOs.Comment;
+using SmoothReads_Backend.DTOs.User;
 
 
 namespace SmoothReads_Backend.Interfaces.Repositories
@@ -14,30 +19,46 @@ namespace SmoothReads_Backend.Interfaces.Repositories
             _context = context;
         }
 
-        public async Task<Favourite?> AddFavouritesAsync(int userId, int bookId)
+        public async Task<Favourite?> AddFavouritesAsync(AddFavouriteDto favouriteDto)
         {
-            var favouriteModel  = await _context.Favourites.FirstOrDefaultAsync(f => f.UserId == userId && f.BookId == bookId);
-    
-            if (favouriteModel != null) 
-                return null;
+            var favouriteModel = favouriteDto.ToFavouriteFromCreateDto();
 
-            var newFavourite = new Favourite
-            {
-                UserId = userId,
-                BookId = bookId,
-            };
-
-            await _context.Favourites.AddAsync(newFavourite);
+            await _context.Favourites.AddAsync(favouriteModel);
             await _context.SaveChangesAsync();  
-            return newFavourite;
+            return favouriteModel;
         }
 
-        public async Task<List<Favourite>?> GetFavouritesByUserIdAsync(int userId)
+        public async Task<List<FavouriteDto>?> GetFavouritesByUserIdAsync(int userId)
         {
-            return await _context.Favourites
+            var favouriteModel = await _context.Favourites
+                .Include(b => b.Book)
+                .Include(u => u.User)
                 .Where(f => f.UserId == userId)
-                .Include(f => f.Book)
                 .ToListAsync();
+
+            if (!favouriteModel.Any())
+                return new List<FavouriteDto>();
+
+            return favouriteModel.Select(f => new FavouriteDto
+            {
+                Id = f.Id,
+                UserId = f.UserId,
+                BookId = f.UserId,
+                User = new List<UserDto>
+                {
+                  new UserDto { Name = f.User.Name }
+                },
+                Book = new List<BookDto>
+                {
+                  new BookDto 
+                  { 
+                      Title = f.Book.Title,
+                      Author = f.Book.Author,
+                      Rating = f.Book.Rating,
+                      ImageUrl = f.Book.ImageUrl,
+                  }
+                }
+            }).ToList();
         }
 
         public async Task<Favourite?> RemoveFavouritesAsync(int userId, int bookId)

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SmoothReads_Backend.DTOs.Favourite;
 using SmoothReads_Backend.Interfaces;
 
 namespace SmoothReads_Backend.Controllers
@@ -20,15 +21,17 @@ namespace SmoothReads_Backend.Controllers
             return Ok(favourites);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> AddFavourites(int userId, int bookId)
+        [HttpPost("{userId}/{bookId}")]
+        public async Task<IActionResult> AddFavourites([FromRoute] int userId, [FromRoute] int bookId)
         {
-            var favourite = await _repo.AddFavouritesAsync(userId, bookId);
+            var favouriteDto = new AddFavouriteDto { UserId = userId, BookId = bookId };
+
+            var favourite = await _repo.AddFavouritesAsync(favouriteDto);
 
             if (favourite == null)
                 return BadRequest("Unable to add favourite.");
 
-            return Ok(favourite);
+            return CreatedAtAction(nameof(AddFavourites), new {id = favourite.Id},favourite);
         }
 
         [HttpDelete]

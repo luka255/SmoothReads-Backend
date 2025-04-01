@@ -12,7 +12,6 @@ namespace SmoothReads_Backend.Mappers
                 Id = userModel.Id,
                 Name = userModel.Name,
                 Email = userModel.Email,
-                Password = userModel.Password,
             };
         }
 

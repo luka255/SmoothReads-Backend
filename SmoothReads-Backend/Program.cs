@@ -1,7 +1,9 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using SmoothReads_Backend.Data;
 using SmoothReads_Backend.Interfaces;
 using SmoothReads_Backend.Interfaces.Repositories;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +18,14 @@ builder.Services.AddDbContext<ApplicationDBContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+
+//builder.Services.AddControllers()
+//    .AddJsonOptions(options =>
+//    {
+//        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+//        options.JsonSerializerOptions.WriteIndented = true; // Optional for readability
+//    });
+
 
 builder.Services.AddScoped<IBookRepository,BookRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();

@@ -8,6 +8,7 @@ using SmoothReads_Backend.DTOs;
 using SmoothReads_Backend.Mappers;
 using System.Collections.Generic;
 using System.Xml.Linq;
+using SmoothReads_Backend.DTOs.Comment;
 
 namespace SmoothReads_Backend.Interfaces.Repositories
 {
@@ -53,18 +54,43 @@ namespace SmoothReads_Backend.Interfaces.Repositories
                 PublicationYear = b.PublicationYear,
                 Rating = b.Rating,
                 ImageUrl = b.ImageUrl,
-                Comments = b.Comments
             }).ToList();
 
             return bookDto;
         }
-        public async Task<Book?> GetBookByIdAsync(int id)
+        public async Task<BookDto?> GetBookByIdAsync(int id)
         {
-            return await _context.Books
+            var book =  await _context.Books
                 .Include(b => b.Comments)
                 .Include(b => b.Favourites)
+                //.Include(b => b.Reads)
+                //.Include(b => b.WantsToReads)
                 .FirstOrDefaultAsync(b => b.Id == id);
+
+            if(book == null) 
+                return null;
+
+            return new BookDto
+            {
+                Id = book.Id,
+                Title = book.Title,
+                Author = book.Author,
+                Genre = book.Genre,
+                Description = book.Description,
+                PublicationYear = book.PublicationYear,
+                Rating = book.Rating,
+                ImageUrl = book.ImageUrl,
+                Comments = book.Comments.Select(c => new CommentDto
+                {
+                    Id = c.Id,
+                    BookId = c.BookId,
+                    Text = c.Text,
+                    Rating = c.Rating,
+                }).ToList(),
+                FavouriteUserIds = book.Favourites.Select(f => f.UserId).ToList()
+            };
         }
+        
         public async Task<List<Book>> GetBooksByGenreAsync(string genre)
         {
             return await _context.Books.Where(b => b.Genre == genre).ToListAsync();
