@@ -35,7 +35,7 @@ namespace SmoothReads_Backend.Controllers
             return CreatedAtAction(nameof(GetWantToReadBooks), new { id = WantToRead.Id }, WantToRead);
         }
 
-        [HttpPost("read-books")]
+        [HttpPost("read-books/{UserId}/{BookId}")]
         public async Task<IActionResult> AddReadBooks([FromRoute] AddReadDto read)
         {
             var readbook = await _repo.AddReadBooksAsync(read);
