@@ -62,7 +62,7 @@ namespace SmoothReads_Backend.Interfaces.Repositories
         {
             var book =  await _context.Books
                 .Include(b => b.Comments)
-                .Include(b => b.Favourites)
+                //.Include(b => b.Favourites)
                 //.Include(b => b.Reads)
                 //.Include(b => b.WantsToReads)
                 .FirstOrDefaultAsync(b => b.Id == id);
@@ -86,8 +86,8 @@ namespace SmoothReads_Backend.Interfaces.Repositories
                     BookId = c.BookId,
                     Text = c.Text,
                     Rating = c.Rating,
-                }).ToList(),
-                FavouriteUserIds = book.Favourites.Select(f => f.UserId).ToList()
+                }).ToList()
+                //FavouriteUserIds = book.Favourites.Select(f => f.UserId).ToList()
             };
         }
         

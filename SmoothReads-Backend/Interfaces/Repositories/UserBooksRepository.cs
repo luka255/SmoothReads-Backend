@@ -2,6 +2,8 @@
 using SmoothReads_Backend.Interfaces;
 using SmoothReads_Backend.Models;
 using Microsoft.EntityFrameworkCore;
+using SmoothReads_Backend.DTOs.UserBooks;
+using SmoothReads_Backend.Mappers;
 
 
 namespace SmoothReads_Backend.Interfaces.Repositories
@@ -14,18 +16,22 @@ namespace SmoothReads_Backend.Interfaces.Repositories
             _context = context;
         }
 
-        public async Task<Read> AddReadBooksAsync(Read Read)
+        public async Task<Read> AddReadBooksAsync(AddReadDto read)
         {
-            await _context.Reads.AddAsync(Read);
+            var readBook = read.CreateReadDto();
+
+            await _context.Reads.AddAsync(readBook);
             await _context.SaveChangesAsync();
-            return Read;
+            return readBook;
         }
 
-        public async Task<WantToRead> AddWantToReadBooksAsync(WantToRead wantToRead)
+        public async Task<WantToRead> AddWantToReadBooksAsync(AddWantToReadDto wantToRead)
         {
-            await _context.WantToReads.AddAsync(wantToRead);
+            var wtrBook =  wantToRead.CreateWantToReadDto();
+
+            await _context.WantToReads.AddAsync(wtrBook);
             await _context.SaveChangesAsync();
-            return wantToRead;
+            return wtrBook;
         }
 
         public async Task<Read?> DeleteReadBookAsync(int userId, int bookId)

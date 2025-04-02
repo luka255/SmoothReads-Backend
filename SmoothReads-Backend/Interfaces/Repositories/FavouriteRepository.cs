@@ -52,10 +52,14 @@ namespace SmoothReads_Backend.Interfaces.Repositories
                 {
                   new BookDto 
                   { 
+                      Id = f.Book.Id,
                       Title = f.Book.Title,
                       Author = f.Book.Author,
+                      Genre = f.Book.Genre,
+                      Description = f.Book.Description,
+                      PublicationYear = f.Book.PublicationYear,
                       Rating = f.Book.Rating,
-                      ImageUrl = f.Book.ImageUrl,
+                      ImageUrl = f.Book.ImageUrl
                   }
                 }
             }).ToList();

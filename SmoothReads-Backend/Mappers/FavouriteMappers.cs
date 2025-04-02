@@ -20,7 +20,7 @@ namespace SmoothReads_Backend.Mappers
             return new Favourite
             {
                 UserId = favouriteModel.UserId,
-                BookId = favouriteModel.BookId
+                BookId = favouriteModel.BookId,
             };
         }
     }

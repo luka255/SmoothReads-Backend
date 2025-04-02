@@ -13,6 +13,6 @@
         public float Rating { get; set; }
         public string ImageUrl { get; set; } = string.Empty;
         public List<CommentDto> Comments { get; set; } = new();
-        public List<int> FavouriteUserIds { get; set; } = new();
+        //public List<int> FavouriteUserIds { get; set; } = new();
     }
 }

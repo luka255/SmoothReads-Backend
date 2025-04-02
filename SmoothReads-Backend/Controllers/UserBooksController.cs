@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SmoothReads_Backend.DTOs.UserBooks;
 using SmoothReads_Backend.Interfaces;
 using SmoothReads_Backend.Models;
 
@@ -27,18 +28,18 @@ namespace SmoothReads_Backend.Controllers
             return Ok(readBooks);
         }
 
-        [HttpPost("want-to-read")]
-        public async Task<IActionResult> AddWantToReadBooks([FromQuery] WantToRead wantToRead)
+        [HttpPost("want-to-read/{UserId}/{BookId}")]
+        public async Task<IActionResult> AddWantToReadBooks([FromRoute] AddWantToReadDto wantToRead)
         {
             var WantToRead = await _repo.AddWantToReadBooksAsync(wantToRead);
-            return CreatedAtAction(nameof(GetWantToReadBooks), new { id = wantToRead.Id }, wantToRead);
+            return CreatedAtAction(nameof(GetWantToReadBooks), new { id = WantToRead.Id }, WantToRead);
         }
 
         [HttpPost("read-books")]
-        public async Task<IActionResult> AddReadBooks([FromQuery] Read read)
+        public async Task<IActionResult> AddReadBooks([FromRoute] AddReadDto read)
         {
             var readbook = await _repo.AddReadBooksAsync(read);
-            return CreatedAtAction(nameof(GetReadBooks), new { id = read.Id }, read);
+            return CreatedAtAction(nameof(GetReadBooks), new { id = readbook.Id }, readbook);
         }
 
         [HttpDelete("want-to-read/{userId}/{bookId}")]
