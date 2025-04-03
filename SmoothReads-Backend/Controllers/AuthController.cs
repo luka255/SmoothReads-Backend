@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity.Data;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using SmoothReads_Backend.Interfaces;
 using Microsoft.IdentityModel.Tokens;
 using SmoothReads_Backend.Interfaces.Repositories;
@@ -28,11 +27,12 @@ namespace SmoothReads_Backend.Controllers
         public async Task<IActionResult> LogIn([FromBody] DTOs.User.LoginRequest request)
         {
             var user = await _userRepo.GetUserByEmailAsync(request.Email);
+            var isPasswordValid = VerifyPassword(request.Password,user.Password);
 
             if (user == null)
                 return Unauthorized("invalid email or password");
 
-            if (!VerifyPassword(request.Password, user.Password))
+            if (!isPasswordValid)
                 return Unauthorized("invalid email or password");
 
             var token = GenerateJwtToken(user.Email, "User");
@@ -81,9 +81,6 @@ namespace SmoothReads_Backend.Controllers
         private bool VerifyPassword(string inputPassword, string storedHash)
         {
             var isMatch = BCrypt.Net.BCrypt.Verify(inputPassword, storedHash);
-            Console.WriteLine($"Input Password: {inputPassword}");
-            Console.WriteLine($"Stored Hash: {storedHash}");
-            Console.WriteLine($"Password Match: {isMatch}");
             return isMatch;
         }
     }
