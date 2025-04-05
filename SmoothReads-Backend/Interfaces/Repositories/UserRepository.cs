@@ -19,7 +19,7 @@ namespace SmoothReads_Backend.Interfaces.Repositories
         {
             var userModel = userDto.ToUserFromCreateDto();
 
-            userModel.Password = BCrypt.Net.BCrypt.HashPassword(userDto.Password);
+            //userModel.Password = BCrypt.Net.BCrypt.HashPassword(userDto.Password);
 
             await _Context.AddAsync(userModel);
             await _Context.SaveChangesAsync();

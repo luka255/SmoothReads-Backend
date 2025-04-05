@@ -43,7 +43,7 @@ namespace SmoothReads_Backend.Interfaces.Repositories
             {
                 Id = f.Id,
                 UserId = f.UserId,
-                BookId = f.UserId,
+                BookId = f.BookId,
                 User = new List<UserDto>
                 {
                   new UserDto { Name = f.User.Name }

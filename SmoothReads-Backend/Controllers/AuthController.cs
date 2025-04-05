@@ -8,6 +8,8 @@ using System.Security.Claims;
 using System.Text;
 using BCrypt.Net;
 using Microsoft.Extensions.Configuration.UserSecrets;
+using System.Security.Cryptography;
+using Konscious.Security.Cryptography;
 
 namespace SmoothReads_Backend.Controllers
 {
@@ -27,10 +29,11 @@ namespace SmoothReads_Backend.Controllers
         public async Task<IActionResult> LogIn([FromBody] DTOs.User.LoginRequest request)
         {
             var user = await _userRepo.GetUserByEmailAsync(request.Email);
-            var isPasswordValid = VerifyPassword(request.Password,user.Password);
 
             if (user == null)
                 return Unauthorized("invalid email or password");
+
+            var isPasswordValid = VerifyPassword(request.Password, user.Password);
 
             if (!isPasswordValid)
                 return Unauthorized("invalid email or password");
@@ -75,13 +78,12 @@ namespace SmoothReads_Backend.Controllers
 
         private string HashPassword(string password)
         {
-            return BCrypt.Net.BCrypt.HashPassword(password);
+            return BCrypt.Net.BCrypt.HashPassword(password);    
         }
 
         private bool VerifyPassword(string inputPassword, string storedHash)
         {
-            var isMatch = BCrypt.Net.BCrypt.Verify(inputPassword, storedHash);
-            return isMatch;
+            return BCrypt.Net.BCrypt.Verify(inputPassword, storedHash);
         }
     }
 }
